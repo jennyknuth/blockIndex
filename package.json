@@ -1,0 +1,41 @@
+{
+  "name": "nio-brunchy",
+  "description": "A Brunch.io skeleton for prototyping/bootstrapping a nio frontend.",
+  "author": "J. Holmes",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nioinnovation/brunchy"
+  },
+  "scripts": {
+    "start": "brunch watch --server",
+    "build": "brunch build --production",
+    "lint": "eslint app/",
+    "test": "mocha",
+    "verify": "eslint app/ && mocha",
+    "clean": "rm -rf public/"
+  },
+  "devDependencies": {
+    "auto-reload-brunch": "^2.7.1",
+    "autoprefixer": "^6.3.6",
+    "chai": "^3.5.0",
+    "clean-css-brunch": "^2.0.0",
+    "css-brunch": "^2.6.1",
+    "eslint": "^2.12.0",
+    "eslint-brunch": "^3.6.0",
+    "javascript-brunch": "^2.0.0",
+    "jsenv-brunch": "^2.0.0",
+    "mocha": "^2.5.3",
+    "nio-scss": "git+ssh://git@github.com:nioinnovation/brunchy.git#nio-scss",
+    "postcss-brunch": "^0.5.0",
+    "sass-brunch": "^2.6.3",
+    "uglify-js-brunch": "^2.0.1"
+  },
+  "dependencies": {
+    "axios": "^0.12.0",
+    "d3": "^3.5.17",
+    "lodash": "^4.13.1",
+    "niojs": "^1.1.5",
+    "socket.io-client": "^1.4.6"
+  }
+}
