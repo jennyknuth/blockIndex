@@ -26,62 +26,61 @@ function parse_link_header(header) {
   return links;
 }
 
-function renderTable(data) {
-  data.sort(function(a, b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);});
-  var app = d3.select('#app');
-  var repoTable = app.append('table').classed('nio-table nio-table--striped', true);
+function renderRows(data, targetElement, sortByKey, reversed) {
 
-  var tableHeader = repoTable.append('thead').append('tr');
-  tableHeader.append('th').html('Block');
-  tableHeader.append('th').html('Description'),
-  tableHeader.append('th').html('Created'),
-  tableHeader.append('th').html('Updated');
+  var rows = targetElement.selectAll('tr')
+  .data(data, function(d) {
+    return d.name;
+  }).sort(function(a, b) {
+    if (reversed === true) {
+      var temp = a;
+      a = b;
+      b = temp;
+    }
+    return d3.ascending(a[sortByKey], b[sortByKey]);
+  });
 
-  var tableBody = repoTable.append('tbody');
-
-  var rows = tableBody.selectAll('tr').data(data).enter()
+  var row = rows.enter()
   .append('tr');
 
-  rows.selectAll('td')
-  .data(function(row) {
-    var link = '<a class="nio-link" href=' + row.html_url + '/blob/master/README.md>' + row.name + '</a>';
-    var created = moment(row.created_at).format('MMM YYYY');
-    var updated = moment(row.created_at).format('MMM YYYY');
-    return [link, row.description, created, updated];
+  row.selectAll('td').data(function(d) {
+    var link = '<a class="nio-link" href=' + d.html_url + '/blob/master/README.md>' + d.name + '</a>';
+    var created = moment(d.created_at).format('MMM YYYY');
+    var updated = moment(d.updated_at).format('MMM YYYY');
+    return [link, d.description, created, updated];
   })
   .enter()
   .append('td')
-  .html(function(d) { return d; });
+  .html(function(d) {
+    return d;
+  });
 
-  //     .append('div')
-  //     .attr('class', 'tooltip')
-  //     .style('opacity', 0.5)
-  //     .data(function(d) {
-  //       console.log('this is d', d);
-  //       return d;
-  //       // axios({
-  //       //   method: 'get',
-  //       //   url: '//api.github.com/repos/nio-blocks/' + d.name + '/readme',
-  //       //   headers: { 'Accept': 'application/vnd.github.html' }
-  //       // })
-  //     }).html(function(d){
-  //       return d.name;
-  //     });
-  //     rows.on("mouseover", function(){return tooltip.style("opacity", 1);})
-  // .on("mousemove", function(){return tooltip.style("top",
-  //   (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");})
-  // .on("mouseout", function(){return tooltip.style("opacity", 0.5);});
+  rows.exit();
+}
+
+function renderTable(data) {
+  var app = d3.select('#app');
+  var repoTable = app.append('table').classed('nio-table nio-table--striped', true);
+  var tableBody = repoTable.append('tbody');
+
+  var tableHeader = repoTable.append('thead').append('tr');
+  tableHeader.append('th').html('Block').on('click', function() {
+    renderRows(data, tableBody, 'name');
+  });
+  tableHeader.append('th').html('Description');
+  tableHeader.append('th').html('Created').on('click', function() {
+    renderRows(data, tableBody, 'created_at', true);
+  });
+  tableHeader.append('th').html('Updated').on('click', function() {
+    renderRows(data, tableBody, 'updated_at', true);
+  });
+
+  renderRows(data, tableBody);
 
   return repoTable;
 }
 
 document.addEventListener('DOMContentLoaded', function init() {
-  // this request will get the readme's html:
-  // axios({
-  //   method: 'get',
-  //   url: '//api.github.com/repos/nio-blocks/hash_table/readme',
-  //   headers: { 'Accept': 'application/vnd.github.html' }
-  // }
 
   axios.get('//api.github.com/orgs/nio-blocks/repos?per_page=100')
   .then(function(response) {
@@ -100,6 +99,6 @@ document.addEventListener('DOMContentLoaded', function init() {
     }
   })
   .catch(function(response) {
-    console.log('error!');
+    console.log('error connecting to github api');
   });
 });
