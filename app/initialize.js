@@ -64,16 +64,19 @@ function renderTable(data) {
   var tableBody = repoTable.append('tbody');
 
   var tableHeader = repoTable.append('thead').append('tr');
-  tableHeader.append('th').html('Block').on('click', function() {
-    renderRows(data, tableBody, 'name');
-  });
+  tableHeader.append('th').html('Block')
+    .on('click', function() {
+      renderRows(data, tableBody, 'name');
+    });
   tableHeader.append('th').html('Description');
-  tableHeader.append('th').html('Created').on('click', function() {
-    renderRows(data, tableBody, 'created_at', true);
-  });
-  tableHeader.append('th').html('Updated').on('click', function() {
-    renderRows(data, tableBody, 'updated_at', true);
-  });
+  tableHeader.append('th').html('Created')
+    .on('click', function() {
+      renderRows(data, tableBody, 'created_at', true);
+    });
+  tableHeader.append('th').html('Updated')
+    .on('click', function() {
+      renderRows(data, tableBody, 'updated_at', true);
+    });
 
   renderRows(data, tableBody);
 

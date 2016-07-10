@@ -5,3 +5,7 @@ body {
   max-width: 900px;
   margin: 0 auto;
 }
+
+tr:nth-child(3n+1) {
+  white-space: nowrap;
+}
