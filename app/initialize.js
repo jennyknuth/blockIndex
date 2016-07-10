@@ -31,7 +31,9 @@ function renderRows(data, targetElement, sortByKey, reversed) {
   var rows = targetElement.selectAll('tr')
   .data(data, function(d) {
     return d.name;
-  }).sort(function(a, b) {
+  });
+
+  rows.sort(function(a, b) {
     if (reversed === true) {
       var temp = a;
       a = b;
