@@ -3,6 +3,7 @@
 window.io = require('socket.io-client');
 var axios = require('axios');
 var d3 = require('d3');
+var moment = require('moment');
 
 function parse_link_header(header) {
   if (header.length === 0) {
@@ -26,13 +27,15 @@ function parse_link_header(header) {
 }
 
 function renderTable(data) {
+  data.sort(function(a, b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);});
   var app = d3.select('#app');
   var repoTable = app.append('table').classed('nio-table nio-table--striped', true);
 
   var tableHeader = repoTable.append('thead').append('tr');
   tableHeader.append('th').html('Block');
   tableHeader.append('th').html('Description'),
-  tableHeader.append('th').html('URL');
+  tableHeader.append('th').html('Created'),
+  tableHeader.append('th').html('Updated');
 
   var tableBody = repoTable.append('tbody');
 
@@ -41,8 +44,10 @@ function renderTable(data) {
 
   rows.selectAll('td')
   .data(function(row) {
-    var link = '<a href=' + row.html_url + '/blob/master/README.md>' + row.name + '</a>';
-    return [link, row.description, row.html_url];
+    var link = '<a class="nio-link" href=' + row.html_url + '/blob/master/README.md>' + row.name + '</a>';
+    var created = moment(row.created_at).format('MMM YYYY');
+    var updated = moment(row.created_at).format('MMM YYYY');
+    return [link, row.description, created, updated];
   })
   .enter()
   .append('td')
